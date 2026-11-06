@@ -1,4 +1,4 @@
-# dexifyyywisher 🎂
+# dexify-birthday wisher 🎂
 
 A free birthday wish page: hero photo, scrolling handwritten letter, balloon-pop game, memories gallery.
 Light and dark mode included. Make your own copy and edit it for someone you love.
