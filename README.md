@@ -1,4 +1,4 @@
-# dexify-birthday wisher 🎂
+# dexifyyywisher 🎂
 
 A free birthday wish page: hero photo, scrolling handwritten letter, balloon-pop game, memories gallery.
 Light and dark mode included. Make your own copy and edit it for someone you love.
@@ -9,13 +9,18 @@ Light and dark mode included. Make your own copy and edit it for someone you lov
 2. In your repo go to **Settings → Pages**. Source: **Deploy from a branch**, branch `main`, folder `/ (root)`, then **Save**.
 3. After 1–2 minutes your page is live at `https://YOUR-USERNAME.github.io/REPO-NAME/`.
 
-## Edit your page
+## Edit your page and get a share link
 
-1. Open your page link with `#edit` at the end, e.g. `https://YOUR-USERNAME.github.io/REPO-NAME/#edit`.
-2. Tap **✎ Edit**. Fill in the name, letter, photos, reasons, balloon messages (Game tab) and your repo link.
-3. Tap **Save & publish**. This downloads a new `index.html`.
-4. In your repo: **Add file → Upload files**, drop the new `index.html` (same name replaces the old one), **Commit changes**.
-5. Wait 1–2 minutes and refresh. Share the normal link (without `#edit`) with the birthday person.
+1. Open your page with `#edit` at the end, e.g. `https://YOUR-USERNAME.github.io/REPO-NAME/#edit`.
+2. Tap **✎ Edit**. Fill in the name, letter, photos, reasons and balloon messages (Game tab).
+3. One-time setup in the **Share** tab: paste your repo link and a GitHub token
+   (GitHub → Settings → Developer settings → Fine-grained tokens → Generate new token,
+   pick only your repo, set **Contents: Read and write**, add an expiry date). The token stays only in your browser.
+4. Tap **Save & get link**. The page is saved into your repo as its own folder and you get a link like
+   `https://YOUR-USERNAME.github.io/REPO-NAME/emily-x7k2/`. It goes live in 1–2 minutes. Send that link to the birthday person.
+5. To change it later, open that link with `#edit`, edit, and save. The link stays the same.
+
+Prefer no token? Use **Download file** and upload the file to your repo yourself.
 
 ## Good to know
 

@@ -77,6 +77,9 @@ footer{text-align:center;padding:36px 20px 44px;color:var(--mute);font-size:14px
 .ths button{position:absolute;top:-6px;right:-6px;padding:0;width:20px;height:20px;line-height:1;font-size:13px}
 .bt{display:flex;gap:10px;margin-top:18px}
 .msg{min-height:22px;margin-top:10px;color:var(--rose);font-size:13px}
+.lk{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.lk input{flex:1;min-width:0}
+.lk a{color:var(--rose)}
 .custom-cursor{width:20px;height:20px;background:var(--rose);border-radius:50%;position:fixed;left:-50px;top:-50px;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background-color .2s}
 .custom-cursor.hover{width:50px;height:50px;background:color-mix(in srgb,var(--rose) 30%,transparent);backdrop-filter:blur(4px);border:1px solid color-mix(in srgb,var(--rose) 50%,transparent)}
 </style></head>
@@ -139,15 +142,16 @@ function openEdit(){
  if($('.dr'))return;
  const d=JSON.parse(JSON.stringify(st)),p=document.createElement('div'),q=s=>p.querySelector(s);
  p.className='dr';
- p.innerHTML='<h3>Edit your page</h3><p class="hint">Only you can see this panel. Visitors never get it.</p><div class="tabs"><button id="b1">Page</button><button id="b2" class="g">Game</button></div>'+
- '<div id="t1"><label>Birthday person’s name<input id="e1"></label><label>From (your name)<input id="e2"></label><label>Subtitle<input id="e3"></label><label>Birthday person’s photo (shows on top instead of 🎂)<input type="file" id="e6" accept="image/*"></label><div class="ths" id="hp"></div><label>Letter (blank line = new paragraph)<textarea id="e4" rows="8"></textarea></label><label>Reasons (one per line)<textarea id="e5" rows="5"></textarea></label><label>GitHub repo link (adds a “Get your own copy” button at the bottom)<input id="e8" placeholder="https://github.com/you/dexifyyywisher"></label><label>Gallery photos<input type="file" id="e7" accept="image/*" multiple></label><div class="ths" id="ths"></div></div>'+
+ p.innerHTML='<h3>Edit your page</h3><p class="hint">Only you can see this panel. Visitors never get it.</p><div class="tabs"><button id="b1">Page</button><button id="b2" class="g">Game</button><button id="b3" class="g">Share</button></div>'+
+ '<div id="t1"><label>Birthday person’s name<input id="e1"></label><label>From (your name)<input id="e2"></label><label>Subtitle<input id="e3"></label><label>Birthday person’s photo (shows on top instead of 🎂)<input type="file" id="e6" accept="image/*"></label><div class="ths" id="hp"></div><label>Letter (blank line = new paragraph)<textarea id="e4" rows="8"></textarea></label><label>Reasons (one per line)<textarea id="e5" rows="5"></textarea></label><label>Gallery photos<input type="file" id="e7" accept="image/*" multiple></label><div class="ths" id="ths"></div></div>'+
  '<div id="t2" hidden><label>Number of balloons (1–8)<select id="gn"></select></label><div id="gms"></div></div>'+
- '<div class="msg" id="ms"></div><div class="bt"><button id="sv">Save &amp; publish</button><button id="cx" class="g">Close</button></div>';
+ '<div id="t3" hidden><label>GitHub repo link (also powers the Get your own copy button)<input id="e8" placeholder="https://github.com/you/your-repo"></label><div id="tkw"><label>GitHub token (saved only on this device)<input id="tk" type="password" autocomplete="off" placeholder="github_pat_..."></label><p class="hint">One-time setup: GitHub, Settings, Developer settings, Fine-grained tokens, Generate new token. Choose only this repository, set Contents to Read and write, and add an expiry date. Paste the token here.</p><button class="g" id="tx">Remove saved token</button></div></div>'+
+ '<div class="msg" id="ms"></div><div class="lk" id="lk"></div><div class="bt"><button id="sv">Save</button><button id="dl" class="g">Download file</button><button id="cx" class="g">Close</button></div>';
  document.body.appendChild(p);
  q('#e1').value=d.name;q('#e2').value=d.from;q('#e3').value=d.tagline;q('#e4').value=d.letter;q('#e5').value=d.reasons.join('\n');q('#e8').value=d.repo||'';
  const msg=t=>q('#ms').textContent=t;
- const tab=k=>{q('#t1').hidden=k!=1;q('#t2').hidden=k!=2;q('#b1').className=k==1?'':'g';q('#b2').className=k==2?'':'g'};
- q('#b1').onclick=()=>tab(1);q('#b2').onclick=()=>tab(2);
+ const tab=k=>{q('#t1').hidden=k!=1;q('#t2').hidden=k!=2;q('#t3').hidden=k!=3;q('#b1').className=k==1?'':'g';q('#b2').className=k==2?'':'g';q('#b3').className=k==3?'':'g'};
+ q('#b1').onclick=()=>tab(1);q('#b2').onclick=()=>tab(2);q('#b3').onclick=()=>tab(3);
  const th=()=>{const t=q('#ths');t.innerHTML='';d.gallery.forEach((u,i)=>{const w=document.createElement('div'),m=new Image(),x=document.createElement('button');m.src=u;x.textContent='×';x.onclick=()=>{d.gallery.splice(i,1);th()};w.append(m,x);t.append(w)})};th();
  const hv=()=>{const t=q('#hp');t.innerHTML='';if(d.hero){const w=document.createElement('div'),m=new Image(),x=document.createElement('button');m.src=d.hero;x.textContent='×';x.title='Remove photo';x.onclick=()=>{d.hero='';hv()};w.append(m,x);t.append(w)}};hv();
  const gm=()=>{const t=q('#gms');t.innerHTML='';for(let i=0;i<d.game.n;i++){const l=document.createElement('label'),inp=document.createElement('input');l.textContent='Balloon '+(i+1)+' message';inp.value=d.game.msgs[i]||'';inp.oninput=()=>{d.game.msgs[i]=inp.value};l.appendChild(inp);t.appendChild(l)}};
@@ -155,15 +159,38 @@ function openEdit(){
  q('#e6').onchange=async e=>{const f=e.target.files[0];if(f){d.hero=await shrink(f,1400,.82);hv()}};
  q('#e7').onchange=async e=>{for(const f of e.target.files){if(d.gallery.length>=12){msg('Max 12 gallery photos.');break}d.gallery.push(await shrink(f,1000,.8))}th()};
  q('#cx').onclick=()=>p.remove();
+ const web=!(CL&&CL.use);q('#sv').textContent=web?'Save & get link':'Save & publish';
+ if(!web){q('#dl').remove();q('#tkw').remove()}else{q('#dl').onclick=()=>{p.dataset.dl='1';q('#sv').click()};q('#tx').onclick=()=>{try{localStorage.removeItem('dw-gh')}catch(e){}q('#tk').value='';msg('Saved token removed.')}}
+ const share=async(d,html)=>{
+  if(p.dataset.dl){delete p.dataset.dl;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([html],{type:'text/html'}));a.download='index.html';a.click();st=d;render();msg('Downloaded index.html.');return}
+  const pt=(d.repo||'').split('github.com/')[1],sp=pt?pt.split('/'):[],o=sp[0],r=(sp[1]||'').split(/[?#]/)[0].replace('.git','');
+  if(!o||!r){tab(3);throw new Error('Add your GitHub repo link in the Share tab first.')}
+  let tok=q('#tk').value.trim();if(!tok){try{tok=localStorage.getItem('dw-gh')||''}catch(e){}}
+  if(!tok){tab(3);throw new Error('Paste your GitHub token in the Share tab first.')}
+  const api='https://api.github.com/repos/'+o+'/'+r+'/contents/'+d.slug+'/index.html',H={Authorization:'Bearer '+tok,Accept:'application/vnd.github+json'};
+  msg('Saving to GitHub…');
+  const g=await fetch(api,{headers:H});let sha;
+  if(g.status==401)throw new Error('GitHub rejected the token. Make a new one.');
+  if(g.ok)sha=(await g.json()).sha;else if(g.status!=404)throw new Error('GitHub error '+g.status+'. Check the repo link and token access.');
+  const by=new TextEncoder().encode(html);let s='';for(let i=0;i<by.length;i+=32768)s+=String.fromCharCode.apply(null,by.subarray(i,i+32768));
+  const u=await fetch(api,{method:'PUT',headers:Object.assign({'Content-Type':'application/json'},H),body:JSON.stringify({message:'Update '+d.slug,content:btoa(s),sha:sha})});
+  if(!u.ok)throw new Error(u.status==403||u.status==404?'No permission. The token needs Contents: Read and write on this repo.':'GitHub error '+u.status);
+  try{localStorage.setItem('dw-gh',tok)}catch(e){}
+  st=d;render();
+  const L='https://'+o.toLowerCase()+'.github.io/'+(r.toLowerCase()==o.toLowerCase()+'.github.io'?'':r+'/')+d.slug+'/',l=q('#lk');
+  l.innerHTML='';const i=document.createElement('input'),b=document.createElement('button'),a=document.createElement('a');i.readOnly=true;i.value=L;b.textContent='Copy link';b.onclick=()=>{i.select();if(navigator.clipboard)navigator.clipboard.writeText(L)};a.href=L;a.target='_blank';a.textContent='Open ↗';l.append(i,b,a);
+  msg('Saved ✓ The link goes live in 1–2 minutes.');
+ };
  q('#sv').onclick=async()=>{
   d.name=q('#e1').value.trim()||D.name;d.from=q('#e2').value.trim()||D.from;d.tagline=q('#e3').value.trim();d.letter=q('#e4').value.trim()||D.letter;
   d.reasons=q('#e5').value.split('\n').map(x=>x.trim()).filter(Boolean);d.repo=q('#e8').value.trim();
+  if(!(CL&&CL.use)&&!d.slug)d.slug=(d.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'wish')+'-'+Math.random().toString(36).slice(2,6);
   const html=build(d);if(html.length>14e6){msg('Photos too large — remove a few.');return}
   msg('Saving…');
   try{
    if(CL&&CL.use){const a=await CL.use('artifact');if(!a)throw 0;await a.publish(html)}
-   else{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([html],{type:'text/html'}));a.download='index.html';a.click();st=d;render();msg('Downloaded index.html — upload it to GitHub to make it live.')}
-  }catch(e){msg('Couldn’t save. Open this page from your own account to edit.')}
+   else{await share(d,html)}
+  }catch(e){msg(e&&e.message?e.message:'Couldn’t save. Open this page from your own account to edit.')}
  };
 }
 render();
