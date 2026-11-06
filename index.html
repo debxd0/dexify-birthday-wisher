@@ -81,7 +81,7 @@ footer{text-align:center;padding:36px 20px 44px;color:var(--mute);font-size:14px
 .custom-cursor.hover{width:50px;height:50px;background:color-mix(in srgb,var(--rose) 30%,transparent);backdrop-filter:blur(4px);border:1px solid color-mix(in srgb,var(--rose) 50%,transparent)}
 </style></head>
 <body><div id="app"></div>
-<script id="state" type="application/json">{}</script>
+<script id="state" type="application/json">{"repo":"https://github.com/debxd0/dexify-birthday-wisher"}</script>
 <script id="code">
 (function(){
 const $=s=>document.querySelector(s),CL=window.claude;
@@ -177,7 +177,7 @@ if(matchMedia('(pointer:fine)').matches){
  addEventListener('mousemove',e=>{c.style.left=e.clientX+'px';c.style.top=e.clientY+'px'});
  document.addEventListener('mouseover',e=>c.classList.toggle('hover',!!(e.target.closest&&e.target.closest('a,button,label,input,select,textarea,.rc,.gl img'))));
 }
-(async()=>{let own=false;try{if(CL&&CL.use){const u=await CL.use('user');own=!!(u&&u.isOwner())}else own=location.hash==='#edit'}catch(e){}
+(async()=>{let own=false;try{if(CL&&CL.use){const u=await CL.use('user');own=!!(u&&u.isOwner())}else own=location.hash==='#edit'||/[?&]edit\b/.test(location.search)}catch(e){}
  if(own){const b=document.createElement('button');b.className='fab';b.textContent='✎ Edit';b.onclick=openEdit;document.body.appendChild(b)}})();
 })();
 </script></body></html>
